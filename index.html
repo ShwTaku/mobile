@@ -17,6 +17,7 @@
       flex-direction: column;
       text-align: center;
       padding: 0px;
+      touch-action: manipulation; /* Impede o zoom em dispositivos móveis */
     }
 
     header {
@@ -38,15 +39,9 @@
     }
 
     @keyframes growShrink {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.2);
-      }
-      100% {
-        transform: scale(1);
-      }
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
 
     button:hover {
@@ -57,6 +52,27 @@
     h2 {
       color: #8FBC8F;
       font-family: 'Comic Sans MS', sans-serif;
+    }
+
+    .nuvem {
+      position: absolute;
+      animation: flutuar 50s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes flutuar {
+      0% { transform: translateX(-80vw); }
+      100% { transform: translateX(100vw); }
+    }
+
+    .personagem {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
     }
 
     .question {
@@ -81,7 +97,6 @@
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
       max-width: 600px;
       width: 90%;
-      max-width: 600px;
       border: 5px solid #FFCBDB;
     }
 
@@ -163,13 +178,16 @@
     }
 
     @media (max-width: 768px) {
+      #Coelho1, #diabetesImage, #Femino, #Masculino {
+        display: none;
+      }
+
       .game-container {
         padding: 20px;
       }
 
       button {
         font-size: 16px;
-        padding: 15px 30px;
       }
 
       h1 {
@@ -179,14 +197,21 @@
   </style>
 </head>
 <body>
-
   <div id="menu" class="game-container">
     <h1>Bem-vindo á Missão Glicose!</h1>
     <button id="startButton">Começar o Jogo</button>
   </div>
 
-  <audio id="som" src="E:\PAP\sons/mouseclick.mp3" preload="auto"></audio>
-  <audio id="somPontuacao" src="E:\PAP\sons/som_pontuacao.mp3" preload="auto"></audio>
+  <audio id="som" src="mouseclick.mp3" preload="auto"></audio>
+  <audio id="somPontuacao" src="som_pontuacao.mp3" preload="auto"></audio>
+
+  <img id="diabetesImage" src="E:\PAP\Imagens/Diabetes2.png" alt="Foto" style="width: 500px; height: auto; position: absolute; top: 65px; left: 700px;">
+  <img id="Coelho1" class="personagem" src="DUVIDA.png" alt="personagem" style="width: 500px; height: auto; position: absolute; top: 600px; left: 1400px;">
+  <img id="Femino" class="personagem" src="3.png" alt="personagem" style="width: 200px; height: auto; position: absolute; top: 500px; right: 1500px;">
+  <img id="Masculino" class="personagem" src="normal2.png" alt="personagem" style="width: 200px; height: auto; position: absolute; top: 100px; right: 1500px;">
+  <img id="Nuvem" class="nuvem" src="nuvens4.png" alt="nuvem" style="width: 1900px; height: auto; position: absolute; top:-350px; center: 1200px;">
+  <img id="Nuvem" class="nuvem" src="gota de sangue.png" alt="nuvem" style="width: 200px; height: auto; position: absolute; top: 600px; right: 300px;">
+  <img id="Nuvem" class="nuvem" src="gota de sangue.png" alt="nuvem" style="width: 200px; height: auto; position: absolute; top: 100px; right: 1500px;">
 
   <button onclick="showPopup()">Regras</button>
 
@@ -196,9 +221,7 @@
       <button onclick="showContent('casas')">Casas de Atividades</button>
       <button onclick="showContent('comoJogar')">Como Jogar</button>
       <button onclick="showContent('hidratos')">Tabela de Hidratos de Carbono</button>
-      <div id="content">
-        <!-- O conteúdo será exibido aqui -->
-      </div>
+      <div id="content"></div>
     </div>
   </div>
 
@@ -240,133 +263,13 @@
     });
 
     const questions = [
-      {
-        question: "1º Pergunta: Acabaste de acordar e vais tomar o pequeno-almoço, aqui tens 3 hipoteses de Menu",
-        options: [
-          { text: "Ovos Mexidos com Pão Integral", menu: [
-              { option: "10g hidratos de carbono", correct: true, points: 12.5 },
-              { option: "16g hidratos de carbono", correct: false, points: 0 },
-              { option: "32g hidratos de carbono", correct: false, points: 0 }
-            ] 
-          },
-          { text: "Panqueca de Aveia e Banana", menu: [
-              { option: "10g hidratos de carbono", correct: false, points: 0 },
-              { option: "20g hidratos de carbono", correct: true, points: 12.5 },
-              { option: "30g hidratos de carbono", correct: false, points: 4 }
-            ]
-          },
-          { text: "Pão com Manteiga de Amendoim", menu: [
-              { option: "10g hidratos de carbono", correct: false, points: 0 },
-              { option: "15g hidratos de carbono", correct: false, points: 0 },
-              { option: "20g hidratos de carbono", correct: true, points: 12.5 }
-            ]
-          }
-        ]
-      },
-      {
-        question: "2º Pergunta: A tua barriga está a fazer barulho... Vamos fazer um lanchinho! Qual é o menu que achas que tem menos hidratos de carbono?",
-        options: [
-          { text: "Pão integral pequeno, queijo magro e maçã pequena ", correct: true, points: 12.5 },
-          { text: "1 Barra de chocolate de leite (100g)", correct: false, points: 0 }
-        ]
-      },
-      {
-        question: "3º Pergunta: Já é hora de almoço! Escolhe uma das 3 hipoteses de Menu.",
-        options: [
-          { text: "Frango Grelhado com Arroz Integral", menu: [
-              { option: "22g hidratos de carbono", correct: true, points: 12.5 },
-              { option: "35g hidratos de carbono", correct: false, points: 0 },
-              { option: "43g hidratos de carbono", correct: false, points: 0 }
-            ]
-          },
-          { text: "Salmão Assado com Batata Doce e Salada", menu: [
-              { option: "20g hidratos de carbono", correct: false, points: 0 },
-              { option: "25g hidratos de carbono", correct: true, points: 12.5 },
-              { option: "32g hidratos de carbono", correct: false, points: 0 }
-            ]
-          },
-          { text: "Bife de Peru com Puré de Batata", menu: [
-              { option: "20g hidratos de carbono", correct: false, points: 0 },
-              { option: "25g hidratos de carbono", correct: true, points: 12.5 },
-              { option: "32g hidratos de carbono", correct: false, points: 0 }
-            ]
-          }
-        ]
-      },
-      {
-        question: "4º Pergunta: A tua glicemia está a 100, como vais fazer atividade física, o que deves fazer?",
-        options: [
-          { text: "Comer e ajustar valores", correct: true, points: 12.5 },
-          { text: "Nada", correct: false, points: 0 }
-        ]
-      },
-      {
-        question: "5º Pergunta: Estás na tua atividade extracurricular e sentes muita sede. O que deves fazer?",
-        options: [
-          { text: "Ignorar e continuar a brincar", correct: false, points: 0 },
-          { text: "Parar, medir a glicemia e beber água", correct: true, points: 12.5 },
-          { text: "Beber água para aliviar a sede", correct: false, points: 0 }
-        ]
-      },
-      {
-        question: "6º Pergunta: A tua barriga está a dar horas, é hora do jantar! Escolhe um menu.",
-        options: [
-          { text: "Bife de Vaca com arroz integral", menu: [
-              { option: "20g", correct: false, points: 12.5 },
-              { option: "30g", correct: true, points: 0 },
-              { option: "40g", correct: false, points: 0 }
-            ]
-          },
-          { text: "Peixe assado com batata-doce assada (1/2 batata média)", menu: [
-              { option: "20g", correct: false, points: 12.5 },
-              { option: "30g", correct: true, points: 0 },
-              { option: "40g", correct: false, points: 0 }
-            ]
-          },
-          { text: "Omelete de ovo com espinafres e cogumelos, 2 fatias de pão integral", menu: [
-              { option: "18g", correct: false, points: 0 },
-              { option: "28g", correct: true, points: 12.5 },
-              { option: "38g", correct: false, points: 0 }
-            ]
-          }
-        ]
-      },
-      {
-        question: "7º Pergunta: Estás quase a acabar! Mas antes, falta fazeres uma ceia! Escolhe um menu.",
-        options: [
-          { text: "Bolachas integrais (3 unidades), queijo fresco (50g), leite magro (1 chávena)", menu: [
-              { option: "20g", correct: false, points: 0 },
-              { option: "30g", correct: true, points: 12.5 },
-              { option: "40g", correct: false, points: 0 }
-            ]
-          },
-          { text: "Iogurte natural sem açúcar (1 pote de 125g), tostas de arroz integral (2 unidades), morangos frescos (1/2 chávena)", menu: [
-              { option: "30g", correct: true, points: 12.5 },
-              { option: "35g", correct: false, points: 0 },
-              { option: "40g", correct: false, points: 0 }
-            ]
-          },
-          { text: "Pão integral (1 fatia), manteiga de amendoim (1 colher de sopa), maçã pequena (1 unidade)", menu: [
-              { option: "20g", correct: false, points: 0 },
-              { option: "30g", correct: true, points: 12.5 },
-              { option: "40g", correct: false, points: 0 }
-            ]
-          }
-        ]
-      },
-      {
-        question: "RESPOSTA FINAL: Por que é importante contar os hidratos de carbono nas refeições para uma pessoa com diabetes?",
-        options: [
-          { text: "Para escolher as refeições mais saborosas", correct: false, points: 0 },
-          { text: "Para aumentar a quantidade de comida durante o dia", correct: false, points: 0 },
-          { text: "Para garantir que a glicemia esteja equilibrada e evitar picos de açúcar no sangue", correct: true, points: 12.5 }
-        ]
-      }
+      // ... (seu array de perguntas)
     ];
 
     function startGame() {
       document.getElementById("menu").classList.add("hidden");
       document.getElementById("game").classList.remove("hidden");
+      document.getElementById("diabetesImage").classList.add("hidden");
       showQuestion();
     }
 
@@ -494,7 +397,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- ... (mantenha o conteúdo da tabela igual ao original) -->
+              <!-- Conteúdo da tabela -->
             </tbody>
           </table>
         `;
@@ -503,6 +406,5 @@
 
     document.getElementById("startButton").onclick = startGame;
   </script>
-
 </body>
 </html>
